@@ -1,0 +1,150 @@
+// UMBRA SHIFT level file
+// = Title      ; hint line      then the grid (top row first)
+// # wall   C obsidian (casts a solid shadow toward the left of the screen)
+// X void crystal (deadly)   G exit   * spark (optional)   S start   . empty
+
+= First Tilt
+; Press Q or E to turn the world. Gravity always pulls toward the bottom of your screen.
+! 3
+#######
+#....G#
+#.###.#
+#.#...#
+#S#.###
+#.....#
+#######
+
+= Cast
+; The lamp hangs on the right of your screen. Obsidian casts shadows to the left - and shadows are solid.
+! 5
+#######
+#...#.#
+#...#.#
+#.#.S##
+#.G#..#
+#....C#
+#######
+
+= Overhang
+; Turn the world and the light turns with it. Watch where the shadow lands.
+! 7
+#######
+#....S#
+#*#.#.#
+#.#.G##
+#C..#.#
+#...#.#
+#######
+
+= Low Sun
+; A wall today is a floor tomorrow.
+! 7
+########
+#*.....#
+#...#..#
+#S..##.#
+#C.#.G.#
+#......#
+########
+
+= Glass Teeth
+; Void crystals shatter you. Press Z to undo, R to restart.
+! 9
+########
+#GX##.##
+#....#.#
+##.C.#.#
+#S.*...#
+#..#.#.#
+#.#.#..#
+########
+
+= Lantern Walk
+; Walk the line of shade.
+! 10
+#########
+#..XG#X*#
+#.......#
+##..#..##
+##.....##
+#S.#C#..#
+#......##
+#########
+
+= Corkscrew
+; Sometimes you have to fall the long way around.
+! 10
+########
+#..S...#
+#...C.##
+##..#.##
+##*#...#
+#..##X.#
+##.#.G.#
+########
+
+= Undercroft
+; You block the lamp too. Your own shadow is not solid.
+! 12
+#########
+#......##
+#*#.S##.#
+#CG....X#
+#.......#
+#.#..#..#
+####..X##
+#.......#
+#########
+
+= Penumbra
+; Patience. Count your turns.
+! 14
+##########
+#S*X....X#
+#....#.#.#
+#####....#
+#.#.#..C.#
+#....#C#.#
+#G#......#
+#...####.#
+##########
+
+= Twin Lamps
+; Two obsidian stones. Both of them matter.
+! 12
+##########
+#.......##
+#.#G##.C.#
+##.#...###
+#.S#..##C#
+#........#
+#..#.....#
+#.#...X..#
+#.#...*X.#
+##########
+
+= Night Shift
+; Every rotation is a promise.
+! 13
+########
+#*##.#S#
+#......#
+#C.....#
+#......#
+##..#G.#
+#..X...#
+########
+
+= Umbra
+; The last shift. Three stones, one way out.
+! 13
+############
+#.S.......##
+#...#.#...##
+#..#.#...###
+#..C.#.....#
+##...##C...#
+#.X........#
+##.....#..##
+#...GX*...C#
+############
