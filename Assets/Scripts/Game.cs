@@ -88,6 +88,8 @@ namespace UmbraShift
 
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-trailer") >= 0)
                 new GameObject("Trailer").AddComponent<TrailerDirector>().G = this;
+            if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-stills") >= 0)
+                new GameObject("Stills").AddComponent<StillsDirector>().G = this;
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-autoshot") >= 0)
                 new GameObject("AutoShot").AddComponent<AutoShot>().G = this;
         }
@@ -289,11 +291,11 @@ namespace UmbraShift
             var center = new Vector3((L.W - 1) * 0.5f, (L.H - 1) * 0.5f, 0);
             float span = Mathf.Max(L.W, L.H) + 2.2f;
             float half = Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
-            float dist = Mathf.Max(span / (0.70f * 2 * half), span / (0.92f * 2 * half * Mathf.Max(0.1f, cam.aspect)));
+            float dist = camZoom * Mathf.Max(span / (0.70f * 2 * half), span / (0.92f * 2 * half * Mathf.Max(0.1f, cam.aspect)));
             float visH = 2 * dist * half;
             var shakeOff = shake > 0 ? (Vector3)(Random.insideUnitCircle * shake * 0.25f) : Vector3.zero;
             shake = Mathf.Max(0, shake - dt * 2.5f);
-            cam.transform.position = center + new Vector3(0, 0, -dist) + shakeOff - up * (mode == Mode.Title || trailer ? 0 : visH * 48f / 720f);
+            cam.transform.position = center + new Vector3(0, 0, -dist) + shakeOff - up * (mode == Mode.Title || trailer ? 0 : visH * 48f / 720f) + right * (visH * cam.aspect * camShiftX);
             cam.transform.rotation = Quaternion.LookRotation(Vector3.forward, up);
 
             // the lamp hangs to the right of the screen and lights toward screen-left

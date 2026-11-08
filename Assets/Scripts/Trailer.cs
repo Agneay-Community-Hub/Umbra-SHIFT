@@ -16,6 +16,7 @@ namespace UmbraShift
         string cardTitle = "", cardSub = "", cardSmall = "";
         float cardA, cardTarget;
         float cardScale = 1f;
+        float camZoom = 1f, camShiftX;   // framing overrides for recorded shots
 
         void DrawTrailer(float W, float H)
         {
@@ -208,6 +209,47 @@ namespace UmbraShift
                 float seconds = frame / (float)FPS;
                 G.synth.SaveRecording(Path.Combine(dir, "audio.wav"), seconds, 2.5f);
                 File.WriteAllText(Path.Combine(dir, "info.txt"), $"frames={frame}\nfps={FPS}\nseconds={seconds:F2}\n");
+                Application.Quit();
+            }
+        }
+    
+        /// <summary>"-stills": renders clean, UI-free 2560x1440 shots for thumbnails and store art.</summary>
+        class StillsDirector : MonoBehaviour
+        {
+            public Game G;
+
+            IEnumerator Start()
+            {
+                string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "stills"));
+                Directory.CreateDirectory(dir);
+                G.trailer = true;
+                G.unlocked = G.levels.Count - 1;
+                var shots = new[]
+                {
+                    (2, "QL", 16f, "cast"),
+                    (10, "ERERRL", -14f, "twin"),
+                    (12, "QQQQLQQ", 18f, "umbra"),
+                    (8, "QQLLLEE", -16f, "undercroft"),
+                };
+                foreach (var (lvl, moves, tilt, name) in shots)
+                {
+                    G.Halt();
+                    G.mode = Mode.Play;
+                    G.LoadLevel(lvl - 1);
+                    G.camZoom = 0.82f; G.camShiftX = 0.17f;
+                    yield return null;
+                    foreach (var m in moves)
+                    {
+                        G.Command(m);
+                        yield return null;
+                        while (G.busy) yield return null;
+                    }
+                    G.mode = Mode.Play;
+                    G.roll += tilt;
+                    yield return new WaitForSeconds(1.2f);
+                    ScreenCapture.CaptureScreenshot(Path.Combine(dir, name + ".png"), 2);
+                    yield return new WaitForSeconds(0.6f);
+                }
                 Application.Quit();
             }
         }
