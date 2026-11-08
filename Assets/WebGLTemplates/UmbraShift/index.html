@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+    <title>{{{ PRODUCT_NAME }}}</title>
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #09080f; }
+      #unity-canvas { display: block; width: 100%; height: 100%; background: #09080f; outline: none; }
+      #loading { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+                 font: 600 14px/1.4 system-ui, sans-serif; letter-spacing: .3em; color: #b9a8ff; background: #09080f; }
+      #loading h1 { font-size: 34px; letter-spacing: .12em; color: #e8deff; margin: 0 0 18px; }
+      #bar { width: 240px; height: 4px; background: #241d3d; margin-top: 14px; border-radius: 2px; overflow: hidden; }
+      #fill { width: 0; height: 100%; background: linear-gradient(90deg, #8a5cff, #6fffd9); }
+    </style>
+  </head>
+  <body>
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+    <div id="loading"><h1>UMBRA SHIFT</h1>TURNING THE WORLD<div id="bar"><div id="fill"></div></div></div>
+    <script src="Build/{{{ LOADER_FILENAME }}}"></script>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+      canvas.addEventListener("click", function () { canvas.focus(); });
+      createUnityInstance(canvas, {
+        arguments: [],
+        dataUrl: "Build/{{{ DATA_FILENAME }}}",
+        frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+        codeUrl: "Build/{{{ CODE_FILENAME }}}",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+      }, function (p) {
+        document.getElementById("fill").style.width = (p * 100) + "%";
+      }).then(function () {
+        document.getElementById("loading").remove();
+        canvas.focus();
+      }).catch(function (message) {
+        alert(message);
+      });
+    </script>
+  </body>
+</html>

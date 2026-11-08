@@ -68,7 +68,7 @@ public static class Pipeline
         PlayerSettings.SplashScreen.showUnityLogo = false;
         PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
         PlayerSettings.WebGL.decompressionFallback = false;
-        PlayerSettings.WebGL.template = "APPLICATION:Minimal";
+        PlayerSettings.WebGL.template = "PROJECT:UmbraShift";
         AssetDatabase.SaveAssets();
         Debug.Log("[Pipeline] Setup complete");
     }
@@ -136,7 +136,12 @@ public static class Pipeline
         if (!ok && Application.isBatchMode) EditorApplication.Exit(2);
     }
 
-    public static void BuildWebGL() => Build(BuildTarget.WebGL, "Builds/WebGL");
+    public static void BuildWebGL()
+    {
+        PlayerSettings.WebGL.template = "PROJECT:UmbraShift";   // fills the itch.io frame, custom loader
+        PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
+        Build(BuildTarget.WebGL, "Builds/WebGL");
+    }
     public static void BuildWindows() => Build(BuildTarget.StandaloneWindows64, "Builds/Windows/UmbraShift.exe");
 
     static void Build(BuildTarget target, string path)
