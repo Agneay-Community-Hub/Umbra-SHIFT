@@ -58,6 +58,57 @@ namespace UmbraShift
             if (c == null) return;
             sfx.pitch = pitch;
             sfx.PlayOneShot(c, vol);
+            if (recording) log.Add((Time.time - recStart, c, vol, pitch));
+        }
+
+        // ---------- offline mixdown (used by the trailer recorder) ----------
+        bool recording;
+        float recStart;
+        readonly System.Collections.Generic.List<(float t, AudioClip c, float vol, float pitch)> log =
+            new System.Collections.Generic.List<(float, AudioClip, float, float)>();
+
+        public void BeginRecording() { recording = true; recStart = Time.time; log.Clear(); }
+
+        /// <summary>Mix music + every logged sound effect into a 16-bit mono WAV of the given length.</summary>
+        public void SaveRecording(string path, float seconds, float musicFadeOut = 3f)
+        {
+            recording = false;
+            int n = Mathf.CeilToInt(seconds * SR);
+            var mix = new float[n];
+            var m = new float[music.clip.samples];
+            music.clip.GetData(m, 0);
+            for (int i = 0; i < n; i++)
+            {
+                float t = i / (float)SR;
+                float env = Mathf.Clamp01(t / 1.5f) * Mathf.Clamp01((seconds - t) / musicFadeOut);
+                mix[i] = m[i % m.Length] * MusicVolume * 1.6f * env;
+            }
+            foreach (var (t, c, vol, pitch) in log)
+            {
+                var d = new float[c.samples];
+                c.GetData(d, 0);
+                int s0 = Mathf.RoundToInt(t * SR);
+                for (int j = 0; ; j++)
+                {
+                    float src = j * pitch;
+                    int si = (int)src;
+                    if (si + 1 >= d.Length || s0 + j >= n) break;
+                    if (s0 + j < 0) continue;
+                    float f = src - si;
+                    mix[s0 + j] += (d[si] * (1 - f) + d[si + 1] * f) * vol;
+                }
+            }
+            float peak = 0.0001f;
+            foreach (var v in mix) peak = Mathf.Max(peak, Mathf.Abs(v));
+            float gain = Mathf.Min(1.6f, 0.92f / peak);
+            using (var w = new System.IO.BinaryWriter(System.IO.File.Create(path)))
+            {
+                w.Write(System.Text.Encoding.ASCII.GetBytes("RIFF")); w.Write(36 + n * 2);
+                w.Write(System.Text.Encoding.ASCII.GetBytes("WAVEfmt ")); w.Write(16); w.Write((short)1); w.Write((short)1);
+                w.Write(SR); w.Write(SR * 2); w.Write((short)2); w.Write((short)16);
+                w.Write(System.Text.Encoding.ASCII.GetBytes("data")); w.Write(n * 2);
+                for (int i = 0; i < n; i++) w.Write((short)Mathf.Clamp(mix[i] * gain * 32767f, -32768, 32767));
+            }
         }
 
         public void SetMusic(bool on) { music.mute = !on; }

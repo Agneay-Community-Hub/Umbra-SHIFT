@@ -8,7 +8,7 @@ namespace UmbraShift
     /// Runtime: builds levels from Resources/levels.txt, renders them with primitives,
     /// animates the rules from <see cref="Sim"/>, and draws the UI with IMGUI.
     /// </summary>
-    public class Game : MonoBehaviour
+    public partial class Game : MonoBehaviour
     {
         enum Mode { Title, Play, Won, End }
 
@@ -86,6 +86,8 @@ namespace UmbraShift
             li = unlocked;
             LoadLevel(li);
 
+            if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-trailer") >= 0)
+                new GameObject("Trailer").AddComponent<TrailerDirector>().G = this;
             if (System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-autoshot") >= 0)
                 new GameObject("AutoShot").AddComponent<AutoShot>().G = this;
         }
@@ -291,7 +293,7 @@ namespace UmbraShift
             float visH = 2 * dist * half;
             var shakeOff = shake > 0 ? (Vector3)(Random.insideUnitCircle * shake * 0.25f) : Vector3.zero;
             shake = Mathf.Max(0, shake - dt * 2.5f);
-            cam.transform.position = center + new Vector3(0, 0, -dist) + shakeOff - up * (mode == Mode.Title ? 0 : visH * 48f / 720f);
+            cam.transform.position = center + new Vector3(0, 0, -dist) + shakeOff - up * (mode == Mode.Title || trailer ? 0 : visH * 48f / 720f);
             cam.transform.rotation = Quaternion.LookRotation(Vector3.forward, up);
 
             // the lamp hangs to the right of the screen and lights toward screen-left
@@ -719,16 +721,18 @@ namespace UmbraShift
             GUI.matrix = Matrix4x4.Scale(new Vector3(s, s, 1));
             float W = Screen.width / s, H = 720f;
 
-            switch (mode)
-            {
-                case Mode.Title: DrawTitle(W, H); break;
-                case Mode.Play: DrawHud(W, H); break;
-                case Mode.Won: DrawHud(W, H); DrawWon(W, H); break;
-                case Mode.End: DrawEnd(W, H); break;
-            }
+            if (!trailer)
+                switch (mode)
+                {
+                    case Mode.Title: DrawTitle(W, H); break;
+                    case Mode.Play: DrawHud(W, H); break;
+                    case Mode.Won: DrawHud(W, H); DrawWon(W, H); break;
+                    case Mode.End: DrawEnd(W, H); break;
+                }
 
             if (flash > 0) Box(new Rect(0, 0, W, H), new Color(flashColor.r, flashColor.g, flashColor.b, flash * 0.35f));
             if (fade > 0) Box(new Rect(0, 0, W, H), new Color(0.02f, 0.015f, 0.04f, fade));
+            if (trailer) DrawTrailer(W, H);
         }
 
         void DrawTitle(float W, float H)

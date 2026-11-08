@@ -54,6 +54,8 @@ UNITY="C:/Program Files/Unity/Hub/Editor/6000.4.3f1/Editor/Unity.exe"
 
 Running the Windows build with `-autoshot` plays a scripted demo and saves screenshots to `Builds/Windows/shots/`.
 
+To record the trailer, run `Tools/make_trailer.ps1`. It rebuilds the player, runs it with `-trailer` (which captures frames at a locked 30 fps and mixes the synthesized audio), and encodes `Builds/Windows/trailer/UmbraShift-trailer.mp4` with ffmpeg.
+
 ### Making levels
 
 Edit `Assets/Resources/levels.txt`. Each level is written as `= Title`, then `; hint`, then `! par`, then the grid. Run `Pipeline.Validate`. It fails if a level can't be solved or if its par doesn't match the shortest solution.
