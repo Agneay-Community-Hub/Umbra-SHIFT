@@ -2,6 +2,20 @@
 
 *Turn the world. Shift the shade.*
 
+[![Umbra Shift — walls become floors, shadows become platforms](docs/thumbnail.png)](https://github.com/Agneay-Community-Hub/Umbra-SHIFT/releases/download/v1.0.0/UmbraShift-trailer.mp4)
+
+## Trailer
+
+![Gameplay preview: turning the world turns obsidian shadows into solid platforms](docs/trailer-preview.gif)
+
+▶ **[Watch the full trailer (58 s, 1080p MP4)](https://github.com/Agneay-Community-Hub/Umbra-SHIFT/releases/download/v1.0.0/UmbraShift-trailer.mp4)**
+
+## Download
+
+**[Windows build — latest release](https://github.com/Agneay-Community-Hub/Umbra-SHIFT/releases/latest)**: download `UmbraShift-Windows.zip`, unzip it and run `UmbraShift.exe`. A browser (WebGL) build is attached to the release too.
+
+## About
+
 A perspective puzzler made for **[GitHub Game Off 2026](https://itch.io/jam/game-off-2026)**. The theme is **SHIFT**.
 
 You are a small lantern-spirit in a tiny stone world. You can't jump. You can only walk left and right and **turn the world 90°**:
